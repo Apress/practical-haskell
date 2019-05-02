@@ -1,0 +1,13 @@
+data Expr 
+  | Plus  left :: Expr right :: Expr
+  | Times left :: Expr right :: Expr
+  | AmountOf c :: Char
+
+attr Expr
+  inh string :: String
+  syn result :: Int
+
+sem Expr
+  | Plus     lhs.result = @left.result + @right.result
+  | Times    lhs.result = @left.result * @right.result
+  | AmountOf lhs.result = { length $ filter (== @c) @lhs.string }

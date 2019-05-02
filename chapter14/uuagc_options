@@ -1,0 +1,3 @@
+file : "src/Chapter14/Simple.ag"
+options : data, semfuns, catas, pretty, wrappers, rename,
+          module "Chapter14.Simple", haskellsyntax, signatures
