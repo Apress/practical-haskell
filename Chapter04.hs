@@ -1,4 +1,4 @@
-module Chapter04 where
+{-# LANGUAGE RecordWildCards #-}
 
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -24,6 +24,25 @@ s = let set1 = S.insert "welcome" $ S.singleton "hello"
     in ( set1 `S.intersection` set2
        , "welcome" `S.member` set1
        , S.map length set2 )
+
+-- | Exercise 4-3
+
+main :: IO ()
+main = putStrLn $ show (classifyClients1 clients)
+
+clients = [GovOrg 1 "A", GovOrg 2 "B", Company 3 "C" (Person "C" "C") "C"]
+
+classifyClients1 :: [Client Integer] -> M.Map ClientKind (S.Set (Client Integer))
+classifyClients1 = foldr (\c m -> case c of
+                            gov@(GovOrg {..}) -> f GovOrgKind gov m
+                            com@(Company {..}) -> f CompanyKind com m
+                            ind@(Individual {..}) -> f IndividualKind ind m
+                   ) M.empty
+                   where f kind c' m = M.insertWith S.union kind (S.singleton c') m
+
+data ClientKind = GovOrgKind | CompanyKind | IndividualKind
+                        deriving (Eq, Ord, Show)
+
 
 -- data Tree   a = Node { rootLabel :: a, subForest :: Forest a }
 -- type Forest a = [Tree a]
@@ -175,3 +194,5 @@ instance Semigroup Min where
 instance Monoid Min where
   mempty  = Min infinity where infinity = 1/0
   mappend = (<>)  -- use the definition from Semigroup
+
+
