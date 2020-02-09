@@ -1,5 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
+module Chapter04 where
+
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Tree
@@ -26,9 +28,6 @@ s = let set1 = S.insert "welcome" $ S.singleton "hello"
        , S.map length set2 )
 
 -- | Exercise 4-3
-
-main :: IO ()
-main = putStrLn $ show (classifyClients1 clients)
 
 clients = [GovOrg 1 "A", GovOrg 2 "B", Company 3 "C" (Person "C" "C") "C"]
 
@@ -194,5 +193,3 @@ instance Semigroup Min where
 instance Monoid Min where
   mempty  = Min infinity where infinity = 1/0
   mappend = (<>)  -- use the definition from Semigroup
-
-
