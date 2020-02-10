@@ -1,7 +1,10 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Chapter04 where
 
 import qualified Data.Map as M
 import qualified Data.Set as S
+import qualified Data.List as L
 import Data.Tree
 import Data.Graph
 
@@ -24,6 +27,28 @@ s = let set1 = S.insert "welcome" $ S.singleton "hello"
     in ( set1 `S.intersection` set2
        , "welcome" `S.member` set1
        , S.map length set2 )
+
+-- | Exercise 4-3
+
+clients = [GovOrg 1 "A", GovOrg 2 "B", Company 3 "C" (Person "C" "C") "C"]
+
+classifyClients1 :: [Client Integer] -> M.Map ClientKind (S.Set (Client Integer))
+classifyClients1 = foldr (\c m -> case c of
+                            gov@(GovOrg { }) -> f GovOrgKind gov m
+                            com@(Company { }) -> f CompanyKind com m
+                            ind@(Individual { }) -> f IndividualKind ind m
+                   ) M.empty
+                   where f kind c' m = M.insertWith S.union kind (S.singleton c') m
+
+classifyClients2 :: [Client Integer] -> M.Map ClientKind (S.Set (Client Integer))
+classifyClients2 = M.fromListWith (S.union) .
+                   map (\case gov@(GovOrg { }) -> (GovOrgKind, (S.singleton gov))
+                              com@(Company { }) -> (CompanyKind, (S.singleton com))
+                              ind@(Individual { }) -> (IndividualKind, (S.singleton ind)))
+
+data ClientKind = GovOrgKind | CompanyKind | IndividualKind
+                        deriving (Eq, Ord, Show)
+
 
 -- data Tree   a = Node { rootLabel :: a, subForest :: Forest a }
 -- type Forest a = [Tree a]
