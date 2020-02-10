@@ -7,7 +7,6 @@ import qualified Data.Set as S
 import qualified Data.List as L
 import Data.Tree
 import Data.Graph
-import Data.Function(on)
 
 m1 = M.singleton "hello" 3
 m2 = M.fromList [("hello",1),("bye",2),("hello",3)]
